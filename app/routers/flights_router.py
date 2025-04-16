@@ -2,7 +2,7 @@ from operator import gt
 from typing import Annotated
 from fastapi import APIRouter, status, Path
 
-from app.crud.flights_crud import (
+from app.services.flights_service import (
     createFlight,
     deleteFlight,
     getAllFlights,

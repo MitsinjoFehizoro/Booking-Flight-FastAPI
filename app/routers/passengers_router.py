@@ -1,7 +1,12 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Path, Query, status
 
-from app.crud.passengers_crud import deletePassenger, getAllPassengers, getPassengerById
+from app.services.passengers_service import (
+    createPassenger,
+    deletePassenger,
+    getAllPassengers,
+    getPassengerById,
+)
 from ..db.fake_db import passengers_db
 from app.models.passenger_model import Passenger
 
@@ -27,8 +32,7 @@ async def get_passenger_by_id(passenger_id: Annotated[int, Path(gt=0)]) -> Passe
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_passanger(passenger: Passenger) -> Passenger:
-    new_passenger = Passenger.model_validate(passenger)
-    passengers_db.append(new_passenger)
+    new_passenger = await createPassenger(passenger)
     return new_passenger
 
 
