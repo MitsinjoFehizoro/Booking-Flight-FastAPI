@@ -12,7 +12,7 @@ class Passenger(BaseModel):
 
     @computed_field
     def id(self) -> int:
-        return len(passengers_db) 
+        return len(passengers_db)
 
     @field_validator("last_name", mode="after")
     @classmethod
