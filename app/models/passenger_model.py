@@ -12,7 +12,7 @@ class Passenger(BaseModel):
 
     @computed_field
     def id(self) -> int:
-        return len(passengers_db)
+        return len(passengers_db) 
 
     @field_validator("last_name", mode="after")
     @classmethod
@@ -27,7 +27,7 @@ class Passenger(BaseModel):
     @field_validator("birth_date", mode="after")
     @classmethod
     def validate_birth_date(cls, value: date) -> date:
-        if (date.today() - value).year < 16:
+        if date.today().year - value.year < 16:
             raise ValueError("Passenger must be at least 16 years old.")
         else:
             return value
