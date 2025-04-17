@@ -24,6 +24,14 @@ async def createFlight(flight: Flight) -> Flight:
     flights_db.append(new_flight)
     return new_flight
 
+async def updateFlight ( flight_id :int , flight : Flight) -> Flight:
+    existing_flight = await getFlightById(flight_id)
+    flight_index = flights_db.index(existing_flight)
+    flight.id = existing_flight.id
+    flights_db.remove(existing_flight)
+    flights_db.insert(flight_index, flight)
+    return flight
+
 
 async def deleteFlight(flight: Flight):
     flights_db.remove(flight)

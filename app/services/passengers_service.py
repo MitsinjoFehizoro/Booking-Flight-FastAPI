@@ -27,13 +27,13 @@ async def createPassenger(passenger: Passenger) -> Passenger:
     return new_passenger
 
 
-async def updatePassenger(passenger_id: int, new_passenger: Passenger) -> Passenger:
-    passenger_updated = await getPassengerById(passenger_id)
-    passenger_updated.last_name = new_passenger.last_name
-    passenger_updated.first_name = new_passenger.first_name
-    passenger_updated.email = new_passenger.email
-    passenger_updated.birth_date = new_passenger.birth_date
-    return passenger_updated
+async def updatePassenger(passenger_id: int, passenger: Passenger) -> Passenger:
+    existing_passenger = await getPassengerById(passenger_id)
+    passenger_index = passengers_db.index(existing_passenger)
+    passenger.id = existing_passenger.id
+    passengers_db.remove(existing_passenger)
+    passengers_db.insert(passenger_index, passenger)
+    return passenger
 
 
 async def deletePassenger(passenger: Passenger):

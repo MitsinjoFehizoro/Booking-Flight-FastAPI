@@ -7,6 +7,7 @@ from app.services.flights_service import (
     deleteFlight,
     getAllFlights,
     getFlightById,
+    updateFlight,
 )
 from app.models.flight_model import Flight
 
@@ -26,6 +27,14 @@ async def get_all_flight() -> list[Flight] | dict:
 async def get_flight_by_id(flight_id: Annotated[int, Path(gt=0)]) -> Flight:
     flight = await getFlightById(flight_id)
     return flight
+
+
+@router.put("/{flight_id}")
+async def update_flight(
+    flight_id: Annotated[int, Path(gt=0)], flight: Flight
+) -> Flight:
+    flight_updated = await updateFlight(flight_id, flight)
+    return flight_updated
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
