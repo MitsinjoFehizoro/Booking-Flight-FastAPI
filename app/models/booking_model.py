@@ -1,5 +1,5 @@
 from typing import Annotated, Literal
-from pydantic import BaseModel, Field, PositiveFloat, computed_field
+from pydantic import BaseModel, Field, PositiveFloat, PositiveInt, computed_field
 from ..db.fake_db import bookings_db
 
 from app.models.flight_model import Flight
@@ -12,8 +12,10 @@ class Booking(BaseModel):
     flight: Flight
     travel_class: Literal["economy", "business", "first"]
     price: PositiveFloat
+    place_number: PositiveInt
 
 
 class BookingRequest(BaseModel):
     travel_class: Literal["economy", "business", "first"]
     price: PositiveFloat
+    place_number: PositiveInt

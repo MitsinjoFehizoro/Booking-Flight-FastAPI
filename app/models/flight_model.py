@@ -6,6 +6,7 @@ from fastapi import HTTPException, status
 from pydantic import (
     BaseModel,
     Field,
+    PositiveInt,
     field_validator,
     model_validator,
 )
@@ -16,6 +17,8 @@ class Flight(BaseModel):
     id: Annotated[int, Field(strict=True)] = 0  # A cause du fake_db
     flight_number: Annotated[str, Field(pattern=r"^[A-Z]{2}[0-9]{3,4}$")]
     airline: Annotated[str, Field(min_length=3, max_length=20)]
+    capacity: Annotated[int, Field(ge=2, le=100)]
+    places_already_booked: set[int] = set()
     departure: Annotated[str, Field(min_length=3, max_length=3)]
     arrival: Annotated[str, Field(min_length=3, max_length=3)]
     departure_time: datetime

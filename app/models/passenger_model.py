@@ -1,11 +1,11 @@
 from datetime import date
+from tkinter import HIDDEN
 from typing import Annotated
-from pydantic import BaseModel, EmailStr, Field, computed_field, field_validator
-from ..db.fake_db import passengers_db
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 class Passenger(BaseModel):
-    id: Annotated[int, Field(strict=True)] = 0  # A cause du fake_db
+    id: Annotated[int, Field(strict=True)]  # A cause du fake_db
     last_name: Annotated[str, Field(min_length=3, max_length=20)]
     first_name: Annotated[str, Field(min_length=3, max_length=30)]
     email: EmailStr
