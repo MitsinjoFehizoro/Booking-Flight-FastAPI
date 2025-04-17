@@ -58,10 +58,17 @@ async def bookingFlight(
         )
     if booking_request.place_number in flight.places_already_booked:
         raise HTTPException(
-            status_code=400,
+            status_code=409,
             detail=f"Place number '{booking_request.place_number}' already booked by other passenger.",
         )
-
+    bookings: list[Booking] = list(
+        filter(lambda b: b.passenger == passenger and b.flight == flight, bookings_db)
+    )
+    if len(bookings) > 0:
+        raise HTTPException(
+            status_code=409,
+            detail=f"The passenger '{passenger.first_name}' already booked flight '{flight.flight_number}'.",
+        )
     new_booking = Booking(
         passenger=passenger,
         flight=flight,
