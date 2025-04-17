@@ -6,7 +6,6 @@ from fastapi import HTTPException, status
 from pydantic import (
     BaseModel,
     Field,
-    computed_field,
     field_validator,
     model_validator,
 )

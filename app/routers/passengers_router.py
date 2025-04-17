@@ -7,7 +7,6 @@ from app.services.passengers_service import (
     getAllPassengers,
     getPassengerById,
 )
-from ..db.fake_db import passengers_db
 from app.models.passenger_model import Passenger
 
 router = APIRouter(
