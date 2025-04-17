@@ -27,6 +27,15 @@ async def createPassenger(passenger: Passenger) -> Passenger:
     return new_passenger
 
 
+async def updatePassenger(passenger_id: int, new_passenger: Passenger) -> Passenger:
+    passenger_updated = await getPassengerById(passenger_id)
+    passenger_updated.last_name = new_passenger.last_name
+    passenger_updated.first_name = new_passenger.first_name
+    passenger_updated.email = new_passenger.email
+    passenger_updated.birth_date = new_passenger.birth_date
+    return passenger_updated
+
+
 async def deletePassenger(passenger: Passenger):
     # Mila fafana ihany koa ny booking
     passengers_db.remove(passenger)

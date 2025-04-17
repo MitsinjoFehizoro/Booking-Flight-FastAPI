@@ -6,6 +6,7 @@ from app.services.passengers_service import (
     deletePassenger,
     getAllPassengers,
     getPassengerById,
+    updatePassenger,
 )
 from app.models.passenger_model import Passenger
 
@@ -33,6 +34,14 @@ async def get_passenger_by_id(passenger_id: Annotated[int, Path(gt=0)]) -> Passe
 async def create_passanger(passenger: Passenger) -> Passenger:
     new_passenger = await createPassenger(passenger)
     return new_passenger
+
+
+@router.put("/{passenger_id}")
+async def update_passenger(
+    passenger_id: Annotated[int, Path(gt=0)], passenger: Passenger
+) -> Passenger:
+    passenger_updated = await updatePassenger(passenger_id, passenger)
+    return passenger_updated
 
 
 @router.delete("/{passenger_id}", response_model_exclude={"id"})
