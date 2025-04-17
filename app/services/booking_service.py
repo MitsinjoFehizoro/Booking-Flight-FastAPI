@@ -49,6 +49,42 @@ async def bookingFlight(
     passenger = await getPassengerById(passenger_id)
     flight = await getFlightById(flight_id)
 
+    checkBooking(passenger, flight, booking_request)
+    bookings: list[Booking] = list(
+        filter(lambda b: b.passenger == passenger and b.flight == flight, bookings_db)
+    )
+    if len(bookings) > 0:
+        raise HTTPException(
+            status_code=409,
+            detail=f"The passenger '{passenger.first_name}' already booked flight '{flight.flight_number}'.",
+        )
+
+    new_booking = Booking(
+        passenger=passenger,
+        flight=flight,
+        travel_class=booking_request.travel_class,
+        price=booking_request.price,
+        place_number=booking_request.place_number,
+    )
+    flights_db[flight.id - 1].places_already_booked.add(new_booking.place_number)
+    new_booking.id = len(bookings_db) + 1
+    bookings_db.append(new_booking)
+    return new_booking
+
+
+async def updateBooking(booking_id: int, booking_request: BookingRequest) -> Booking:
+    booking = await getBookingById(booking_id)
+
+    checkBooking(booking.passenger, booking.flight, booking_request)
+
+    new_booking = booking.model_copy(update=booking_request.model_dump())
+    index = bookings_db.index(booking)
+    bookings_db.remove(booking)
+    bookings_db.insert(index, new_booking)
+    return new_booking
+
+
+def checkBooking(passenger: Passenger, flight: Flight, booking_request: BookingRequest):
     if (
         booking_request.place_number == 0
         or booking_request.place_number > flight.capacity
@@ -61,22 +97,3 @@ async def bookingFlight(
             status_code=409,
             detail=f"Place number '{booking_request.place_number}' already booked by other passenger.",
         )
-    bookings: list[Booking] = list(
-        filter(lambda b: b.passenger == passenger and b.flight == flight, bookings_db)
-    )
-    if len(bookings) > 0:
-        raise HTTPException(
-            status_code=409,
-            detail=f"The passenger '{passenger.first_name}' already booked flight '{flight.flight_number}'.",
-        )
-    new_booking = Booking(
-        passenger=passenger,
-        flight=flight,
-        travel_class=booking_request.travel_class,
-        price=booking_request.price,
-        place_number=booking_request.place_number,
-    )
-    flights_db[flight.id - 1].places_already_booked.add(new_booking.place_number)
-    new_booking.id = len(bookings_db) + 1
-    bookings_db.append(new_booking)
-    return new_booking

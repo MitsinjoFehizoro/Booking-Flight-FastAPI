@@ -9,6 +9,7 @@ from app.services.booking_service import (
     getBookingById,
     getBookingsFlight,
     getPassengerBookings,
+    updateBooking,
 )
 
 
@@ -47,6 +48,14 @@ async def get_bookings_flight(
     if bookings:
         return bookings
     return {"message": "No booking made with this flight."}
+
+
+@router.put("/{booking_id}")
+async def update_booking(
+    booking_id: Annotated[int, Path(gt=0)], booking_request: BookingRequest
+) -> Booking:
+    updated_booking = await updateBooking(booking_id, booking_request)
+    return updated_booking
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)

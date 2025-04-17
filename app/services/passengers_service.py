@@ -29,10 +29,10 @@ async def createPassenger(passenger: Passenger) -> Passenger:
 
 async def updatePassenger(passenger_id: int, passenger: Passenger) -> Passenger:
     existing_passenger = await getPassengerById(passenger_id)
-    passenger_index = passengers_db.index(existing_passenger)
-    passenger.id = existing_passenger.id
+    index = passengers_db.index(existing_passenger)
+    new_passenger = existing_passenger.model_copy(update=passenger.model_dump(exclude={"id"}))
     passengers_db.remove(existing_passenger)
-    passengers_db.insert(passenger_index, passenger)
+    passengers_db.insert(index, new_passenger)
     return passenger
 
 
